@@ -156,6 +156,7 @@ class BinaryTree {
                     //if node has only one child
                 } else if (node.left === null || node.right === null) {
                     return node.left === null ? node.right : node.left;
+                    //if node has only one child
                 } else {
                     var current = node.left;
                     //find the rightmost node
