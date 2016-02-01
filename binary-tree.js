@@ -109,12 +109,15 @@ class BinaryTree {
 							replacementParent = replacement;
 							replacement = replacement.right;
 						}
+
 						//remove founded replacement from the old location
 						replacementParent.right = replacement.left;
 
 						//assign children to the replacement
-						replacement.left = current.left;
 						replacement.right = current.right;
+						if (replacement !== current.left) {
+							replacement.left = current.left;
+						}
 
 						if(!parent) {
 							this.root = replacement;
@@ -131,7 +134,17 @@ class BinaryTree {
 	}
 
 	size() {
+		var counter = 0;
+		preorderTraversal(this.root);
 
+		function preorderTraversal(node) {
+			if (node !== null) {
+				counter++;
+				preorderTraversal(node.left);
+				preorderTraversal(node.right);
+			}
+		}
+		return counter;
 	}
 
 	isEmpty() {
