@@ -7,38 +7,35 @@ class BinaryTree {
 
     insert(data) {
         //create new Node item and fill it by input data
-        var node = new Node(data);
-        var current;
-        //special case: the tree is empty yet
-        if (this.root === null) {
+        let node = new Node(data);
+        if (!this.root) {
             this.root = node;
-        } else {
-            current = this.root;
-            //add new item to a tree according to binary tree property
-            while (true) {
-                if (data < current.data) {
-                    if (current.left === null) {
-                        current.left = node;
-                        break;
-                    } else {
-                        current = current.left;
-                    }
+            return;
+        }
 
-                } else if (data > current.data) {
-                    if (current.right === null) {
-                        current.right = node;
-                        break;
-                    } else {
-                        current = current.right;
-                    }
-
-                } else break;
-            }
+        let current = this.root;
+        //add new item to a tree according to binary tree property
+        while (true) {
+            if (data < current.data) {
+                if (current.left === null) {
+                    current.left = node;
+                    break;
+                } else {
+                    current = current.left;
+                }
+            } else if (data > current.data) {
+                if (current.right === null) {
+                    current.right = node;
+                    break;
+                } else {
+                    current = current.right;
+                }
+            } else break;
         }
     }
 
     contains(data) {
-        var current = this.root;
+        let current = this.root;
 
         while (current) {
             if (data < current.data) {
@@ -58,8 +55,8 @@ class BinaryTree {
     REMOVE VARIANT 1
     *******************************/
     /*remove(data) {
-        var parent = null;
-        var current = this.root;
+        let parent = null;
+        let current = this.root;
 
         while (current) {
             if (data < current.data) {
@@ -72,8 +69,9 @@ class BinaryTree {
             } else {
                 //figure out number of children
                 //and consider 6 types of node location
-                var childNumber = (current.left === null ? 0 : 1) +
+                let childNumber = (current.left === null ? 0 : 1) +
                     (current.right === null ? 0 : 1);
+
                 switch (childNumber) {
                     case 0:
                         //type 1: no children, the value is at the root
@@ -102,10 +100,11 @@ class BinaryTree {
                         break;
                     case 2:
                         //types 5-6: node has two children
-                        var replacementParent = current;
-                        var replacement = current.left;
+                        let replacementParent = current;
+                        let replacement = current.left;
+
                         //find the rightmost node
-                        while (replacement.right !== null) {
+                        while (replacement.right) {
                             replacementParent = replacement;
                             replacement = replacement.right;
                         }
@@ -140,9 +139,10 @@ class BinaryTree {
         this.root = remove(this.root, data);
 
         function remove(node, data) {
-            if (node === null) {
+            if (!node) {
                 return null;
             }
+
             if (data < node.data) {
                 node.left = remove(node.left, data);
                 return node;
@@ -153,18 +153,22 @@ class BinaryTree {
                 //if node has no children
                 if (node.left === null && node.right === null) {
                     return null;
-                    //if node has only one child
-                } else if (node.left === null || node.right === null) {
+                }
+                //if node has only one child
+                if (node.left === null || node.right === null) {
                     return node.left === null ? node.right : node.left;
-                    //if node has only one child
-                } else {
-                    var current = node.left;
+                }
+                //if node has two children
+                if (node.left !== null || node.right !== null) {
+                    let current = node.left;
+
                     //find the rightmost node
                     while (current.right) {
                         current = current.right;
                     }
                     node.data = current.data;
                     node.left = remove(node.left, current.data);
+
                     return node;
                 }
             }
@@ -172,18 +176,18 @@ class BinaryTree {
     }
 
     size() {
-        var counter = 0;
-        preorderTraversal(this.root);
+        return preorderTraversal(this.root, 0);
 
-        function preorderTraversal(node) {
-            if (node !== null) {
-                counter++;
-                preorderTraversal(node.left);
-                preorderTraversal(node.right);
+        function preorderTraversal(node, counter) {
+            if (!node) {
+                return counter;
             }
-        }
 
-        return counter;
+            let leftCounter = preorderTraversal(node.left, 0);
+            let rightCounter = preorderTraversal(node.right, 0);
+
+            return counter + leftCounter + rightCounter + 1;
+        }
     }
 
     isEmpty() {
